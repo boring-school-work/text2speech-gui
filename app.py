@@ -3,34 +3,26 @@ from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton
 import sys
 
 
-# Signals & slots
-## Signals are notifications emitted by widgets when something happens. E.g. pressing a button, changing input text, etc.
-## Slots is the name Qt uses for the receiver of signals. Any function can be used as a slot -- simply by connecting the signal to it.
-
 class MainWindow(QMainWindow):
     def __init__(self, *args, **kwargs):
         super(MainWindow, self).__init__(*args, **kwargs)
 
+        self.button_checked = True
         self.setWindowTitle("Python Text To Speech")
-        # create button widget
-        button = QPushButton('Click Me!')
-        # provide a toggle state for button; False by default
-        button.setCheckable(True)
-        # exploring the 'clicked' signal
-        ## use .connect to connect a function to a signal
-        button.clicked.connect(self.on_click)
-        button.clicked.connect(self.on_toggle)
-        self.setCentralWidget(button)
-        self.c = 1
+        self.button = QPushButton('Click Me!')
 
-    # slot for clicking signal (from .clicked)
-    def on_click(self):
-        print('Clicked!', self.c)
-        self.c += 1
+        # if a widget does not provide a signal that sends the current state, you need to retrive the value from the widget directly in your handler
+        self.button.setCheckable(True)
+        self.button.released.connect(self.on_release)
+        self.button.setChecked(self.button_checked)
+        self.setCentralWidget(self.button)
     
-    # slot for toggle signal (from .clicked)
-    def on_toggle(self, checked):
-        print('Checked?', checked)
+    def on_release(self):
+        print(self.button.isChecked())
+        self.button_checked = self.button.isChecked()
+        print(self.button_checked)
+        
+        
 
 
 
