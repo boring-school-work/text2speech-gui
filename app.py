@@ -3,25 +3,34 @@ from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton
 import sys
 
 
-# Suubclass QMainWindow to customise your application's main window
+# Signals & slots
+## Signals are notifications emitted by widgets when something happens. E.g. pressing a button, changing input text, etc.
+## Slots is the name Qt uses for the receiver of signals. Any function can be used as a slot -- simply by connecting the signal to it.
+
 class MainWindow(QMainWindow):
-    # When you subclass a Qt class you must always call the super __init__ function to allow Qt to set up the object.
     def __init__(self, *args, **kwargs):
         super(MainWindow, self).__init__(*args, **kwargs)
 
         self.setWindowTitle("Python Text To Speech")
-        button = QPushButton("Click Me")
-        # # As well as .setFixedSize() 
-        self.setFixedSize(QSize(500, 500))
-
-        # # .setMinimumSize() to set the minimum size of the window
-        self.setMinimumSize(QSize(500, 500))
-
-        # .setMaximumSize() sets the maximum size of the window.
-        self.setMaximumSize(QSize(500, 500))
-
-        # set central widget
+        # create button widget
+        button = QPushButton('Click Me!')
+        # provide a toggle state for button; False by default
+        button.setCheckable(True)
+        # exploring the 'clicked' signal
+        ## use .connect to connect a function to a signal
+        button.clicked.connect(self.on_click)
+        button.clicked.connect(self.on_toggle)
         self.setCentralWidget(button)
+        self.c = 1
+
+    # slot for clicking signal (from .clicked)
+    def on_click(self):
+        print('Clicked!', self.c)
+        self.c += 1
+    
+    # slot for toggle signal (from .clicked)
+    def on_toggle(self, checked):
+        print('Checked?', checked)
 
 
 
@@ -30,6 +39,4 @@ app = QApplication(sys.argv)
 window = MainWindow()
 window.show()
 
-
-# start the event loop
 app.exec_()
