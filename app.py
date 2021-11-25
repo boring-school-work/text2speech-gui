@@ -1,5 +1,5 @@
 from PyQt5.QtCore import QSize
-from PyQt5.QtWidgets import QApplication, QMainWindow, QLabel, QLineEdit, QVBoxLayout, QWidget, QPushButton
+from PyQt5.QtWidgets import QApplication, QMainWindow, QLabel, QLineEdit, QVBoxLayout, QWidget, QPushButton, QTextEdit
 import sys
 from gtts import gTTS
 from playsound import playsound
@@ -12,17 +12,16 @@ class MainWindow(QMainWindow):
         self.setWindowTitle('Python Text To Speech')
         self.setMinimumSize(QSize(500, 500))
 
-        self.button = QPushButton('Print')
-        self.label = QLabel()
-        self.input = QLineEdit()
+        self.button = QPushButton('Convert Text To Speech')
+        self.input = QTextEdit()
+        self.input.setFixedSize(QSize(500, 500))
+        self.input.setPlaceholderText('Enter text here')
         self.button.setCheckable(True)
         self.button.clicked.connect(self.on_click)
-        # self.input.textChanged.connect(self.label.setText)
 
         layout = QVBoxLayout()
         layout.addWidget(self.input)
         layout.addWidget(self.button)
-        layout.addWidget(self.label)
 
         container = QWidget()
         container.setLayout(layout)
@@ -30,10 +29,9 @@ class MainWindow(QMainWindow):
         self.setCentralWidget(container)
 
     def on_click(self):
-        self.text = self.input.text()
+        self.text = self.input.toPlainText()
         tts = gTTS(text=self.text, lang='en')
         tts.save('output.mp3')
-        self.label.setText(self.text)
         playsound('output.mp3')
 
 
