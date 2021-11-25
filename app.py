@@ -1,26 +1,40 @@
 from PyQt5.QtCore import QSize, Qt
 from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton
 import sys
-from gtts import gTTS
-from playsound import playsound
+
+
+window_titles = [
+    "MyApp",
+    "MyApp2",
+    "MyApp3",
+    "MyApp4",
+    "MyApp5",
+    "MyApp6",
+    "Something went wrong"
+]
 
 
 class MainWindow(QMainWindow):
     def __init__(self, *args, **kwargs):
         super(MainWindow, self).__init__(*args, **kwargs)
 
-        self.checked = True
-        self.setWindowTitle("Python Text To Speech")
-        self.button = QPushButton('Click Me!')
+        self.n_times_clicked = 0
+        self.setWindowTitle(window_titles[0])
+        self.button = QPushButton("Click me")
+        self.button.clicked.connect(self.on_button_clicked)
         self.setCentralWidget(self.button)
-        self.button.setCheckable(True)
-        self.button.setChecked(self.checked)
-        self.button.clicked.connect(self.on_toggle)
+        self.windowTitleChanged.connect(self.on_window_title_changed)
 
-    def on_toggle(self):
-        self.tts = gTTS(text='clicked!', lang="en")
-        self.tts.save("output.mp3")
-        playsound('output.mp3')
+    def on_button_clicked(self):
+        self.n_times_clicked += 1
+        new_window_title = window_titles[self.n_times_clicked]
+        self.setWindowTitle(new_window_title)
+
+    def on_window_title_changed(self, title):
+        print(f"Window title changed to {title}")
+
+        if title == 'Something went wrong':
+            self.button.setDisabled(True)
         
         
         
