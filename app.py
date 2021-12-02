@@ -12,27 +12,22 @@ class MainWindow(QMainWindow):
         self.setWindowTitle('Python Text To Speech')
         self.setMinimumSize(QSize(500, 500))
 
-        self.button = QPushButton('Convert Text To Speech')
-        self.input = QTextEdit()
-        self.input.setFixedSize(QSize(500, 500))
-        self.input.setPlaceholderText('Enter text here')
-        self.button.setCheckable(True)
-        self.button.clicked.connect(self.on_click)
+        self.setMouseTracking(True)
 
-        layout = QVBoxLayout()
-        layout.addWidget(self.input)
-        layout.addWidget(self.button)
+        self.label = QLabel('Click in this window')
+        self.setCentralWidget(self.label)
 
-        container = QWidget()
-        container.setLayout(layout)
+    def mouseMoveEvent(self, e):
+        self.label.setText('mouseMoveEvent')
 
-        self.setCentralWidget(container)
-
-    def on_click(self):
-        self.text = self.input.toPlainText()
-        tts = gTTS(text=self.text, lang='en')
-        tts.save('output.mp3')
-        playsound('output.mp3')
+    def mousePressEvent(self, e):
+        self.label.setText('mousePressEvent')
+    
+    def mouseReleaseEvent(self, e):
+        self.label.setText('mouseReleaseEvent')
+    
+    def mouseDoubleClickEvent(self, e):
+        self.label.setText('mouseDoubleClickEvent')
 
 
 
