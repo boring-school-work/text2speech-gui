@@ -1,6 +1,6 @@
 from PyQt5.QtCore import QSize, Qt
 from PyQt5.QtGui import QPixmap
-from PyQt5.QtWidgets import QApplication, QHBoxLayout, QLabel, QMainWindow, QLabel, QVBoxLayout, QWidget, QPushButton, QTextEdit
+from PyQt5.QtWidgets import QApplication, QHBoxLayout, QMainWindow, QLabel, QVBoxLayout, QWidget, QPushButton, QTextEdit
 import sys
 from gtts import gTTS
 from playsound import playsound
