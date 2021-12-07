@@ -2,7 +2,7 @@
 Convert text to speech in python
 
 
-## Running on you local machine
+## Running on your local machine
 * First clone the repository:
   ```bash
   git clone https://github.com/DaveSaah/text2speech-gui.git
