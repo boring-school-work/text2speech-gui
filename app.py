@@ -121,13 +121,11 @@ class MainWindow(QMainWindow):
         self.fileName, _ = QFileDialog.getOpenFileName(self, "QFileDialog.getOpenFileName()", "","All Files (*);;Word Document (*.doc);;Pdf Document (*.pdf)", options=options)
         if self.fileName:
             if self.fileName.endswith('.docx'):
-                self.file_label_data.setText(f'Converting {self.fileName} to speech...')
                 self.convert_docx_to_speech(self.fileName)
-                self.file_label_data.setText(f'Converted {self.fileName} to speech\nYou can play the audio file by clicking on play button')
+                self.file_label_data.setText(f'Conversion done\nYou can play the audio file by clicking on play button')
             elif self.fileName.endswith('.pdf'):
-                self.file_label_data.setText(f'Converting {self.fileName} to speech...')
                 self.convert_pdf_to_speech(self.fileName)
-                self.file_label_data.setText(f'Converted {self.fileName} to speech\nYou can play the audio file by clicking on play button')
+                self.file_label_data.setText(f'Conversion done\nYou can play the audio file by clicking on play button')
 
     def play_audio(self):
         if self.fileName.endswith('.docx'):
