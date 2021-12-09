@@ -1,4 +1,4 @@
-from PyQt5.QtCore import QSize, Qt
+from PyQt5.QtCore import QEvent, QSize, Qt
 from PyQt5.QtGui import QPixmap
 from PyQt5.QtWidgets import QApplication, QHBoxLayout, QMainWindow, QLabel, QVBoxLayout, QWidget, QPushButton, QTextEdit
 import sys
@@ -9,6 +9,10 @@ from playsound import playsound
 class MainWindow(QMainWindow):
     def __init__(self, *args, **kwargs):
         super(MainWindow, self).__init__(*args, **kwargs)
+
+
+        self.installEventFilter(self)
+        self.counter = 0
 
         self.setWindowTitle('Python Text To Speech')
         self.setMinimumSize(QSize(500, 500))
@@ -23,7 +27,7 @@ class MainWindow(QMainWindow):
         self.image = QPixmap('logo.png')
         self.image_label.setPixmap(self.image)
 
-        self.text_label = QLabel('This Application is used to convert text to speech. This proves useful for people who are blind to be able to read text to promote learning thus satifying the second AU Goal which states: "Well educated citizens and skills revolution underpinned by Science, Technology and Innovation."', self)
+        self.text_label = QLabel('This Application is used to convert text to speech. This proves useful for people who are blind to be able to read text to promote learning thus satisfying the second AU Goal which states: "Well educated citizens and skills revolution underpinned by Science, Technology and Innovation."', self)
         self.text_label.setWordWrap(True)
         text_label_font = self.text_label.font()
         text_label_font.setPointSize(12)
@@ -60,6 +64,17 @@ class MainWindow(QMainWindow):
         self.setCentralWidget(container)
 
 
+    def eventFilter(self, obj, event):
+        if (event.type() == QEvent.HoverEnter and self.counter == 0):
+            self.welcome_message()
+            self.counter += 1
+            return True
+        return super(MainWindow, self).eventFilter(obj, event)
+
+    def welcome_message(self):
+        playsound('welcome.mp3')
+
+
     def on_input_button_click(self):
         self.text = self.text_input.toPlainText()
         tts = gTTS(text=self.text, lang='en')
@@ -67,9 +82,12 @@ class MainWindow(QMainWindow):
         playsound('output.mp3') 
 
 
-app = QApplication(sys.argv)
+def main():
+    app = QApplication(sys.argv)
+    window = MainWindow()
+    window.show()
+    sys.exit(app.exec_())
 
-window = MainWindow()
-window.show()
 
-app.exec_()
+if __name__ == '__main__':
+    main()
