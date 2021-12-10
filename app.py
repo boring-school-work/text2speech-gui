@@ -73,9 +73,9 @@ class MainWindow(QMainWindow):
 
 
     def eventFilter(self, obj, event):
-        if (event.type() == QEvent.HoverEnter and self.counter == 0):
-            self.thread = QThread()
-            self.worker = Worker()
+        if (event.type() == QEvent.Show and self.counter == 0):
+            self.thread = QThread(parent=self)
+            self.worker = Worker(parent=self)
             self.worker.moveToThread(self.thread)
             self.thread.started.connect(self.worker.welcome_message)
             self.worker.finished.connect(self.thread.quit)
