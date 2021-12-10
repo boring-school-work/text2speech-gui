@@ -18,3 +18,6 @@ Convert text to speech in python
   ```bash
     python app.py
   ```
+
+## Screenshots
+![Screenshot](Screenshot.png)
