@@ -1,9 +1,17 @@
-from PyQt5.QtCore import QEvent, QSize, Qt
+from PyQt5.QtCore import QEvent, QObject, QSize, QThread, Qt, pyqtSignal
 from PyQt5.QtGui import QPixmap
 from PyQt5.QtWidgets import QApplication, QHBoxLayout, QMainWindow, QLabel, QVBoxLayout, QWidget, QPushButton, QTextEdit
 import sys
 from gtts import gTTS
 from playsound import playsound
+
+
+class Worker(QObject):
+    finished = pyqtSignal()
+
+    def welcome_message(self):
+        playsound('welcome.mp3')
+        self.finished.emit()
 
 
 class MainWindow(QMainWindow):
@@ -66,13 +74,18 @@ class MainWindow(QMainWindow):
 
     def eventFilter(self, obj, event):
         if (event.type() == QEvent.HoverEnter and self.counter == 0):
-            self.welcome_message()
+            self.thread = QThread()
+            self.worker = Worker()
+            self.worker.moveToThread(self.thread)
+            self.thread.started.connect(self.worker.welcome_message)
+            self.worker.finished.connect(self.thread.quit)
+            self.worker.finished.connect(self.worker.deleteLater)
+            self.thread.finished.connect(self.thread.deleteLater)
+            self.thread.start()
             self.counter += 1
             return True
         return super(MainWindow, self).eventFilter(obj, event)
 
-    def welcome_message(self):
-        playsound('welcome.mp3')
 
 
     def on_input_button_click(self):
