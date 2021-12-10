@@ -4,6 +4,7 @@ from PyQt5.QtWidgets import QApplication, QHBoxLayout, QMainWindow, QLabel, QVBo
 import sys
 from gtts import gTTS
 from playsound import playsound
+from platform import platform
 
 
 class Worker(QObject):
@@ -74,8 +75,13 @@ class MainWindow(QMainWindow):
 
     def eventFilter(self, obj, event):
         if (event.type() == QEvent.Show and self.counter == 0):
-            self.thread = QThread(parent=self)
-            self.worker = Worker(parent=self)
+            if 'linux' in platform().lower():
+                self.thread = QThread(parent=self)
+                self.worker = Worker(parent=self)
+            else:
+                self.thread = QThread()
+                self.worker = Worker()
+            
             self.worker.moveToThread(self.thread)
             self.thread.started.connect(self.worker.welcome_message)
             self.worker.finished.connect(self.thread.quit)
@@ -85,7 +91,6 @@ class MainWindow(QMainWindow):
             self.counter += 1
             return True
         return super(MainWindow, self).eventFilter(obj, event)
-
 
 
     def on_input_button_click(self):
