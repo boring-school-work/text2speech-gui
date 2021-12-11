@@ -204,7 +204,94 @@ layout.addWidget(self.convert_input_button)
 
 > `QHBoxLayout` arranges widgets horizontally.
 
-* 
+* `H_layout` is set to align center with the `.setAlignment()` method.
+* `.addWidget()` method is used to add widgets to a layout.
+* `.addLayout()` method is used to add a layout to another layout.
+* `self.title` widget is added first, followed by the addition of `H_layout` which has `self.image_label` and `self.text_label` widgets aligned horizontally. This followed by the addition of `self.text_input` and `self.convert_input_button`. 
+
+
+```python3
+container = QWidget()
+container.setLayout(layout)
+```
+* The variable `container` is set to QWidget (which is the base class of all user interface objects in our Qt app). 
+* `.setLayout` sets the layout of `container` to `layout`(which contains all the widgets has been created).
+
+
+```python3
+self.setCentralWidget(container)
+```
+* This sets the central widget that is displayed in our Qt application
+
+
+```python3
+def eventFilter(self, obj, event):
+    if (event.type() == QEvent.Show and self.counter == 0):
+        if 'linux' in platform().lower():
+          self.thread = QThread(parent=self)
+          self.worker = Worker(parent=self)
+        else:
+          self.thread = QThread()
+          self.worker = Worker()
+
+        self.worker.moveToThread(self.thread)
+        self.thread.started.connect(self.worker.welcome_message)
+        self.worker.finished.connect(self.thread.quit)
+        self.worker.finished.connect(self.worker.deleteLater)
+        self.thread.finished.connect(self.thread.deleteLater)
+        self.thread.start()
+        self.counter += 1
+        return True
+    return super(MainWindow, self).eventFilter(obj, event)
+```
+* `eventFilter` function handles an intercepted event in our application.
+
+> The plan is to play a welcome message when the gui window shows.
+
+* The `eventFilter` function intercepts the show window event and plays the welcome message. 
+* **From line 2**: The condition includes `self.counter == 0` because without that statement in the condition, the welome message will play everytime the user leaves the window (for e.g. when minimizing and maximizing) and it will not provide a great user experience. 
+    * **In line 16**: `self.counter` is increased by one to show that the window has been opened once; as a result, the `eventFilter` function is called only once. 
+* `Lines 3 - 8`: It has a condition of platform specific code.
+    * This is because windows systems handle multithreading differently from the linux kernel, hence a different implementation of the same code is needed for it to work on Windows.
+    * `Lines 4 - 5` executes if the platform is linux-based. Here, the QThread and Worker class inherits from the parent (which is the `MainWindow` ). This give the threading process the same lifetime as as the main application window. 
+    * **Lines 7 - 8** executes on windows platforms. Here, the QThread and Worker class are not subclassed into the parent class (`MainWindow`). Windows systems automatically sets the threading process lifetime the same as the `MainWindow`.
+* **In line 10**, the `Worker` class is set to run on `self.thread`
+    * `self.thread` is an object of `QThread` class which provides a platform-independent way to manage threads.
+* **Line 11** connects the *started* signal of `self.thread` to `self.worker.welcome_message`.
+    * `self.worker.welcome_message` is called and executed in the thread.#
+* **On lines 12 - 14**, The thread is connected to built-in functions that executes to teminate the thread after the function has been called. 
+* `self.thread.start()` starts the thread. 
+* `return True` **on line 17** is necessary to show that the event has has been intercepted successfully. 
+* If the condition returns `True`,
+    * **Line 18** runs by returning the `MainWindow` and the implementation of the `eventFilter` function.
+* Else if the condition returns `False`, 
+    * **Line 18** runs by returning the `MainWindow` without the implementation of the `eventFilter` function.
+
+> Multithreading is useful since the implementation of processes on a different thread does not affect the operation of other threads, hence ensuring an efficient running of the application. 
+
+
+```python3
+def on_input_button_click(self):
+      self.text = self.input.toPlainText()
+      tts = gTTS(text=self.text, lang='en')
+      tts.save('output.mp3')
+      playsound('output.mp3')
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
