@@ -1,5 +1,5 @@
 # text2speech-gui
-Convert text to speech in python
+A school project work - Convert text to speech in python
 
 
 ## Running on your local machine
